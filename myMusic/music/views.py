@@ -1,5 +1,4 @@
 from django.http.response import Http404
-from rest_framework.serializers import Serializer
 from .models import Song
 from .serializers import SongSerializer
 from rest_framework.views import APIView
@@ -24,14 +23,14 @@ class SongList(APIView):
 
 class SongDetail(APIView):
     
-    def get_song(self, pk):
+    def get_object(self, pk):
         try:
-            song = Song.objects.get(pk=pk)
+            return Song.objects.get(pk=pk)
         except Song.DoesNotExist:
             raise Http404
 
     def get(self, request, pk):
-        song = Song.objects.get(pk=pk)
+        song = self.get_object(pk)
         serializer = SongSerializer(song)
         return Response(serializer.data)
 
